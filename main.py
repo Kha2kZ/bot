@@ -133,7 +133,7 @@ class AntiSpamBot(commands.Bot):
         # Per-user locks for preventing race conditions in daily rewards
         self._daily_locks = {}
 
-        # File-based backup system
+        self.backup_task = None
         self.backup_file_path = "user_cash_backup.json"
         self._load_backup_data()
 
@@ -2149,33 +2149,11 @@ async def main():
         embed.set_footer(text="All systems operational", icon_url=bot.user.display_avatar.url if bot.user and bot.user.display_avatar else None)
         await ctx.send(embed=embed)
 
-    @bot.command(name='echo')
-    async def echo_command(ctx, *, message):
-        """Repeat the user's message"""
-        embed = discord.Embed(
-            title="📢 Echo Chamber",
-            description=f"**“{message}”**",
-            color=0x9966cc
-        )
-        embed.set_author(name=f"{ctx.author.display_name} says...", icon_url=ctx.author.display_avatar.url if ctx.author.display_avatar else None)
-        try:
-            await ctx.message.delete()  # Delete the user's original message to keep it secret
-        except discord.errors.NotFound:
-            pass  # Message was already deleted
-        except discord.errors.Forbidden:
-            pass  # Bot doesn't have permission to delete messages
-        await ctx.send(message)
-
     # === SOCIAL COMMANDS (REDUCED) ===
     @bot.command(name='ping')
     async def ping_command(ctx):
         """Test if bot is online"""
         await ctx.send("Tôi ở đây:)")
-
-    @bot.command(name='echo')
-    async def echo_command(ctx, *, message):
-        """Repeat the user's message"""
-        await ctx.send(message)
 
     # === CASH SYSTEM HELPER METHODS ===
     def _get_user_cash(self, guild_id, user_id):

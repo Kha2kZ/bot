@@ -385,16 +385,16 @@ class TaiXiu(commands.Cog):
         active_game[1]['bets'].append({'user_id': user_id, 'username': ctx.author.display_name, 'side': side, 'amount': bet_amount})
         await ctx.send(f"✅ Đã cược **{bet_amount:,} VND** vào **{side.upper()}**!")
 
-    @commands.command(name='txshow')
-    async def txshow(self, ctx):
-        self.bot.overunder_autocycle[f"{ctx.guild.id}_{ctx.channel.id}"] = True
-        await ctx.send("🔄 Tự động bật!")
-
     @commands.command(name='gamestop')
     async def gamestop(self, ctx):
         key = f"{ctx.guild.id}_{ctx.channel.id}"
         if key in self.bot.overunder_autocycle: del self.bot.overunder_autocycle[key]
         await ctx.send("⏹️ Đã dừng!")
+
+    @commands.command(name='txshow')
+    async def txshow(self, ctx):
+        self.bot.overunder_autocycle[f"{ctx.guild.id}_{ctx.channel.id}"] = True
+        await ctx.send("🔄 Tự động bật!")
 
 async def main():
     async with bot:
